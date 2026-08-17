@@ -65,8 +65,9 @@ export interface WireAssistantMessage {
   content: string | null
   /**
    * CoT passback. REQUIRED on assistant turns that carried tool calls
-   * (thinking mode); ignored on tool-call-free turns (we omit it there to
-   * save tokens). See guides/thinking_mode.mdx § Tool Calls.
+   * (thinking mode) — even when empty (the API rejects its absence); ignored
+   * on tool-call-free turns (we omit it there to save tokens). See
+   * guides/thinking_mode.mdx § Tool Calls.
    */
   reasoning_content?: string
   tool_calls?: WireToolCall[]

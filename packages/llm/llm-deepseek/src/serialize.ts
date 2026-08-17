@@ -95,8 +95,9 @@ function serializeAssistant(message: Message): WireMessage {
     content: text,
     // Official passback rule (guides/thinking_mode.mdx): reasoning_content
     // must return on tool-call turns; it is ignored on plain turns, so we
-    // drop it there to save tokens.
-    ...toolCalls.length > 0 && reasoning.length > 0 ? { reasoning_content: reasoning } : {},
+    // drop it there to save tokens. The API requires the field present even
+    // when the reasoning is empty, so emit it on every tool-call turn.
+    ...toolCalls.length > 0 ? { reasoning_content: reasoning } : {},
     ...toolCalls.length > 0 ? { tool_calls: toolCalls } : {},
   }
 }

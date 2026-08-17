@@ -65,6 +65,26 @@ describe('serializeMessages', () => {
     }])
   })
 
+  it('emits reasoning_content on tool-call turns even when the reasoning is empty', () => {
+    // The API rejects tool-call turns that omit reasoning_content outright,
+    // so the field must be present (as "") when no reasoning block exists.
+    const wire = serializeMessages([
+      createMessage({
+        role: 'assistant',
+        content: [
+          { type: 'tool-call', id: CallId('call-1'), name: 'get_weather', arguments: '{"city":"Paris"}' },
+        ],
+        source: { kind: 'plugin', plugin: 'test' },
+      }),
+    ])
+    expect(wire).toEqual([{
+      role: 'assistant',
+      content: '',
+      reasoning_content: '',
+      tool_calls: [{ id: 'call-1', type: 'function', function: { name: 'get_weather', arguments: '{"city":"Paris"}' } }],
+    }])
+  })
+
   it('serializes parallel tool calls in order', () => {
     const wire = serializeMessages([
       createMessage({
